@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KATO 360 · Carpeta del cliente</title>
+<style>
+  :root{
+    --bg:#07070d; --panel:#10101a; --panel2:#16162400;
+    --mint:#3dffb8; --purple:#a678ff; --text:#f2f2f5; --muted:#9a9ab0;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;min-height:100vh;display:flex;flex-direction:column}
+  header{padding:22px 20px 6px;display:flex;align-items:center;gap:12px;max-width:980px;width:100%;margin:0 auto}
+  .badge{display:flex;align-items:center;gap:10px}
+  .ring{width:44px;height:44px;border-radius:50%;border:3px solid var(--purple);border-top-color:var(--mint);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;color:#fff;transform:rotate(-18deg)}
+  .ring span{transform:rotate(18deg)}
+  .wordmark{font-size:26px;font-weight:800;letter-spacing:1px}
+  .wordmark b{color:var(--mint);font-weight:800}
+  main{flex:1;width:100%;max-width:980px;margin:0 auto;padding:10px 20px 40px}
+  h1{font-size:30px;line-height:1.15;margin:16px 0 4px}
+  .sub{color:var(--muted);font-size:15px;margin-bottom:22px}
+  h2{font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--purple);margin:26px 0 12px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+  .card{background:var(--panel);border:1px solid #23233a;border-radius:16px;overflow:hidden}
+  .card img{width:100%;height:170px;object-fit:cover;display:block;background:#1a1a2a}
+  .card .ph{height:170px;background:linear-gradient(135deg,#1b1b2e,#241a3f);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px}
+  .card .body{padding:14px}
+  .card h3{font-size:17px;margin-bottom:6px}
+  .card p{color:var(--muted);font-size:14px;margin-bottom:10px}
+  .price{color:var(--mint);font-weight:700;font-size:16px;margin-bottom:10px}
+  .btn{display:inline-block;background:linear-gradient(90deg,var(--mint) 50%,var(--purple) 50%);color:#0a0a12;font-weight:700;font-size:15px;padding:11px 18px;border-radius:12px;text-decoration:none;border:none;cursor:pointer;width:100%;text-align:center}
+  .btn:active{opacity:.85}
+  .empty{background:var(--panel);border:1px dashed #2c2c48;border-radius:16px;padding:34px 22px;text-align:center;color:var(--muted);font-size:16px;line-height:1.5}
+  .ba-frame{background:var(--panel);border:1px solid #23233a;border-radius:16px;overflow:hidden;margin-bottom:8px}
+  .ba-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;gap:10px}
+  .ba-tag{font-weight:800;font-size:14px;letter-spacing:1px;padding:6px 12px;border-radius:999px;background:var(--purple);color:#0d0d14}
+  .ba-tag.after{background:var(--mint)}
+  .ba-pill{display:flex;background:#fff;border-radius:999px;overflow:hidden;cursor:pointer;border:none;padding:0}
+  .ba-pill span{padding:8px 14px;font-size:13px;font-weight:800;color:#33334d;letter-spacing:.5px}
+  .ba-pill span.on-a{background:var(--purple);color:#fff}
+  .ba-pill span.on-b{background:var(--mint);color:#0d0d14}
+  .ba-view{position:relative;height:340px;background:#000}
+  .ba-view iframe{width:100%;height:100%;border:0;display:block}
+  .ba-badge{position:absolute;top:10px;left:10px;display:flex;align-items:center;gap:7px;background:rgba(10,10,18,.82);padding:6px 10px;border-radius:999px;pointer-events:none}
+  .ba-badge .ring{width:26px;height:26px;border-width:2px;font-size:12px}
+  .ba-badge .wm{font-size:14px;font-weight:800;letter-spacing:.5px}
+  .ba-badge .wm b{color:var(--mint)}
+  .ba-cap{padding:10px 14px;color:var(--muted);font-size:13px}
+  .unavailable{text-align:center;padding:60px 20px;color:var(--muted)}
+  .unavailable h1{color:var(--text)}
+  footer{padding:20px;text-align:center;color:var(--muted);font-size:13px;border-top:1px solid #1b1b2c}
+  #toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:#1d1d2e;border:1px solid var(--purple);color:#fff;padding:10px 16px;border-radius:10px;font-size:14px;opacity:0;pointer-events:none;transition:all .25s}
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<header>
+  <div class="badge">
+    <div class="ring"><span>K</span></div>
+    <div class="wordmark">KATO <b>360</b></div>
+  </div>
+</header>
+<main id="app">
+  <div class="unavailable"><h1>Cargando…</h1></div>
+</main>
+<footer>© 2026 KATO 360 · Todos los derechos reservados · Contenido protegido</footer>
+<div id="toast">Contenido protegido © KATO 360 — no está permitido copiarlo</div>
+<script>
+(function(){
+  var app = document.getElementById('app');
+  function unavailable(){
+    app.innerHTML = '<div class="unavailable"><h1>Carpeta no disponible</h1><p>Este enlace no está activo. Pide a KATO 360 que te comparta el enlace de tu carpeta.</p></div>';
+  }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function findPair(tours){
+    for(var i=0;i<tours.length;i++){
+      var t = tours[i];
+      if(t.kind === 'antes' && t.pairId != null && t.link){
+        for(var j=0;j<tours.length;j++){
+          var d = tours[j];
+          if(d.id === t.pairId && d.kind === 'despues' && d.link){ return {antes:t, despues:d}; }
+        }
+      }
+    }
+    return null;
+  }
+  function baFrame(pair){
+    return '<div class="ba-frame">'
+      + '<div class="ba-head"><span class="ba-tag" id="baTag">Antes</span>'
+      + '<button class="ba-pill" id="baPill" type="button"><span id="baA" class="on-a">ANTES</span><span id="baB">DESPUÉS</span></button></div>'
+      + '<div class="ba-view"><iframe id="baFrame" src="'+esc(pair.antes.link)+'" allow="fullscreen" loading="lazy"></iframe>'
+      + '<div class="ba-badge"><div class="ring"><span>K</span></div><div class="wm">KATO <b>360</b></div></div></div>'
+      + '<div class="ba-cap">Compara el antes y el después · Toca ANTES o DESPUÉS para cambiar</div>'
+      + '</div>';
+  }
+  function cardTour(t){
+    var img = t.image ? '<img src="'+esc(t.image)+'" alt="">' : '<div class="ph">Tour 360°</div>';
+    var btn = t.link ? '<a class="btn" href="'+esc(t.link)+'" target="_blank" rel="noopener">Ver tour</a>' : '';
+    return '<div class="card">'+img+'<div class="body"><h3>'+esc(t.name||'Tour 360')+'</h3>'+btn+'</div></div>';
+  }
+  function cardCar(c){
+    var img = c.image ? '<img src="'+esc(c.image)+'" alt="">' : '<div class="ph">Carro en 360°</div>';
+    var price = c.price ? '<div class="price">'+esc(c.price)+'</div>' : '';
+    var det = c.details ? '<p>'+esc(c.details)+'</p>' : '';
+    var btn = c.link ? '<a class="btn" href="'+esc(c.link)+'" target="_blank" rel="noopener">Ver tour 360</a>' : '';
+    return '<div class="card">'+img+'<div class="body"><h3>'+esc(c.name||'Carro')+'</h3>'+det+price+btn+'</div></div>';
+  }
+  var DATA = {"folders":{"CaOQEC6VddD6vlmD0fxz2BOZ":{"active":true,"cars":[{"active":true,"details":null,"id":1,"image":"https://kato360tours.com/cruze-2017.jpg","link":"https://pano.cool/p/01M55VEH16J7KKA9PR26HRCW0C","name":"Chevrolet Cruze 2017","price":"$4,000"}],"name":"Tour 3338 s Waring","tours":[]},"NO76h-_TyI_zgVeoeVtRLWE0":{"active":true,"cars":[],"name":"Victoria  basement","tours":[{"active":true,"id":1,"image":null,"kind":"antes","link":null,"name":"Basement","pairId":null}]}}};
+  var token = (location.hash || '').replace(/^#/, '');
+  if(!token){ unavailable(); return; }
+  (function(data){
+      var f = data && data.folders ? data.folders[token] : null;
+      if(!f || !f.active){ unavailable(); return; }
+      var tours = (f.tours||[]).filter(function(t){ return t.active !== false; });
+      var cars = (f.cars||[]).filter(function(c){ return c.active !== false; });
+      var html = '<h1>'+esc(f.name)+'</h1><div class="sub">Carpeta privada del cliente · KATO 360</div>';
+      var pair = findPair(tours);
+      if(pair){
+        html += '<h2>Antes / Después</h2>' + baFrame(pair);
+      }
+      if(!tours.length && !cars.length){
+        html += '<div class="empty">Esta carpeta todavía no tiene tours publicados.<br>Cuando tu tour esté listo, aparecerá aquí mismo.</div>';
+      }
+      if(tours.length){
+        html += '<h2>Tours</h2><div class="grid">' + tours.map(cardTour).join('') + '</div>';
+      }
+      if(cars.length){
+        html += '<h2>Carros</h2><div class="grid">' + cars.map(cardCar).join('') + '</div>';
+      }
+      app.innerHTML = html;
+      if(pair){
+        var showingAfter = false;
+        var frame = document.getElementById('baFrame');
+        var tag = document.getElementById('baTag');
+        var sA = document.getElementById('baA');
+        var sB = document.getElementById('baB');
+        document.getElementById('baPill').addEventListener('click', function(){
+          showingAfter = !showingAfter;
+          frame.src = showingAfter ? pair.despues.link : pair.antes.link;
+          tag.textContent = showingAfter ? 'Después' : 'Antes';
+          tag.className = 'ba-tag' + (showingAfter ? ' after' : '');
+          sA.className = showingAfter ? '' : 'on-a';
+          sB.className = showingAfter ? 'on-b' : '';
+        });
+      }
+  })(DATA);
+  // Protección de contenido (igual que el sitio principal)
+  var toast = document.getElementById('toast'), tt;
+  function warn(){ toast.classList.add('show'); clearTimeout(tt); tt = setTimeout(function(){ toast.classList.remove('show'); }, 2200); }
+  document.addEventListener('contextmenu', function(e){ e.preventDefault(); warn(); });
+  document.addEventListener('copy', function(e){ e.preventDefault(); warn(); });
+  document.addEventListener('cut', function(e){ e.preventDefault(); warn(); });
+})();
+</script>
+</body>
+</html>
