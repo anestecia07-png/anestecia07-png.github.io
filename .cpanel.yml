@@ -1,0 +1,13 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=$HOME/public_html/
+    - /bin/cp index.html $DEPLOYPATH
+    - /bin/cp p-gina-web-de-la-compa-a.html $DEPLOYPATH
+    - /bin/cp carpeta.html $DEPLOYPATH
+    - /bin/cp portafolio.html $DEPLOYPATH
+    - /bin/cp portafolio-es.html $DEPLOYPATH
+    - /bin/cp panel-de-vencimientos.html $DEPLOYPATH
+    - /bin/cp cruze-2017.jpg $DEPLOYPATH
+    - /bin/cp logo-kato360.png $DEPLOYPATH
+    - /bin/cp logo-kato360.svg $DEPLOYPATH

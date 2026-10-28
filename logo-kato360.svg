@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1045" height="424" viewBox="0 0 1045 424">
+
+<g transform="translate(120,104) scale(4.5)"><path d="M20.7 5.3 A19 19 0 0 1 33.5 40.5" stroke="#4ff3a5" stroke-width="4" stroke-linecap="round"/>
+            <path d="M27.3 42.7 A19 19 0 0 1 14.5 7.6" stroke="#a978ff" stroke-width="4" stroke-linecap="round"/>
+            <text x="24" y="31" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-size="19" font-weight="700" fill="#f6fff9">K</text></g>
+<text x="384" y="259.52" font-family="Barlow Condensed" font-size="134" font-weight="700" letter-spacing="6.7"><tspan fill="#f6fff9">KATO </tspan><tspan fill="#4ff3a5">360</tspan></text>
+<g transform="translate(849.1593750000001,128.2) rotate(-8 52.0 52.0) scale(4.333333333333333)"><path d="M12 4.5V2.9" stroke="#a978ff" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="2.3" r="1.2" fill="#a978ff"/><path d="M7.6 10.4a4.4 4.4 0 0 1 8.8 0z" fill="#4ff3a5"/><circle cx="10.3" cy="7.8" r=".95" fill="#07110f" opacity=".5"/><ellipse cx="12" cy="12.8" rx="10.4" ry="3.7" fill="#a978ff"/><ellipse cx="12" cy="11.9" rx="10.4" ry="3.3" fill="#f6fff9"/><circle cx="6" cy="12.5" r="1.05" fill="#4ff3a5"/><circle cx="12" cy="13.4" r="1.05" fill="#a978ff"/><circle cx="18" cy="12.5" r="1.05" fill="#4ff3a5"/><path d="M8.7 16.9h6.6l2.5 4.5H6.2z" fill="#4ff3a5" opacity=".38"/></g>
+</svg>

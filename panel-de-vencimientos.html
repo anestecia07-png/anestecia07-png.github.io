@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>Panel de vencimientos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #f2f5f2;
+        --surface: #ffffff;
+        --surface-2: #e9efea;
+        --ink: #101613;
+        --muted: #5a6860;
+        --line: #dde5de;
+        --mint: #0a7d5a;
+        --mint-soft: #e2f4ec;
+        --ok: #0a7d5a;
+        --ok-soft: #e2f4ec;
+        --warn: #b26a00;
+        --warn-soft: #fdf0dc;
+        --danger: #c62f35;
+        --danger-soft: #fde7e7;
+        --unknown: #66736b;
+        --unknown-soft: #e8ece9;
+        --shadow: 0 1px 2px rgba(16, 30, 22, .05), 0 10px 30px -18px rgba(16, 30, 22, .25);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0a0f0c;
+          --surface: #131a15;
+          --surface-2: #1a231c;
+          --ink: #edf4ee;
+          --muted: #97a89c;
+          --line: #243028;
+          --mint: #43e6a8;
+          --mint-soft: #123527;
+          --ok: #43e6a8;
+          --ok-soft: #123527;
+          --warn: #f2b04c;
+          --warn-soft: #3a2a10;
+          --danger: #ff7a72;
+          --danger-soft: #3d1a18;
+          --unknown: #9fb0a4;
+          --unknown-soft: #202a23;
+          --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px -18px rgba(0,0,0,.7);
+        }
+      }
+      * { box-sizing: border-box; }
+      html { -webkit-text-size-adjust: 100%; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Manrope", system-ui, -apple-system, sans-serif;
+        font-size: 16px;
+        line-height: 1.5;
+      }
+      .wrap { max-width: 880px; margin: 0 auto; padding: 20px 16px 56px; }
+
+      .today-line {
+        display: flex; align-items: center; gap: 8px;
+        color: var(--muted); font-weight: 600; font-size: .92rem;
+        text-transform: capitalize;
+      }
+      .today-line .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--mint); flex: none; }
+
+      /* ---------- Hero: próximo cobro ---------- */
+      .hero {
+        margin-top: 14px;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        box-shadow: var(--shadow);
+        padding: 22px;
+        display: flex; gap: 20px; align-items: center;
+      }
+      .hero-main { flex: 1; min-width: 0; }
+      .hero-kicker { font-size: .8rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+      .hero-name { font-family: "Sora", sans-serif; font-size: 1.45rem; font-weight: 700; line-height: 1.2; margin-top: 4px; }
+      .hero-meta { color: var(--muted); font-weight: 600; margin-top: 4px; }
+      .hero-meta strong { color: var(--ink); }
+      .hero-count { text-align: center; flex: none; min-width: 104px; }
+      .hero-count .num {
+        font-family: "Sora", sans-serif; font-weight: 800; font-size: 3.4rem; line-height: 1;
+        font-variant-numeric: tabular-nums;
+      }
+      .hero-count .lbl { font-weight: 700; color: var(--muted); font-size: .85rem; margin-top: 2px; }
+      .hero[data-status="warn"] .hero-count .num { color: var(--warn); }
+      .hero[data-status="danger"] .hero-count .num { color: var(--danger); }
+      .hero[data-status="ok"] .hero-count .num { color: var(--ok); }
+      .hero-bar { height: 8px; border-radius: 99px; background: var(--surface-2); margin-top: 16px; overflow: hidden; }
+      .hero-bar i { display: block; height: 100%; border-radius: 99px; background: var(--mint); width: 0%; transition: width .8s ease; }
+      .hero[data-status="warn"] .hero-bar i { background: var(--warn); }
+      .hero[data-status="danger"] .hero-bar i { background: var(--danger); }
+      .hero-action { margin-top: 12px; color: var(--muted); font-size: .95rem; }
+      .hero-action strong { color: var(--ink); }
+
+      /* ---------- Stats ---------- */
+      .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 14px; }
+      .stat {
+        background: var(--surface); border: 1px solid var(--line); border-radius: 16px;
+        padding: 14px 16px; box-shadow: var(--shadow);
+      }
+      .stat .v { font-family: "Sora", sans-serif; font-weight: 800; font-size: 1.5rem; font-variant-numeric: tabular-nums; }
+      .stat .k { color: var(--muted); font-weight: 600; font-size: .85rem; margin-top: 2px; }
+
+      /* ---------- Sections ---------- */
+      h2.section {
+        font-family: "Sora", sans-serif; font-size: 1.25rem; font-weight: 700;
+        margin: 34px 0 6px;
+      }
+      .section-sub { color: var(--muted); font-weight: 500; margin: 0 0 14px; }
+
+      .legend { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 4px; }
+      .legend span {
+        display: inline-flex; align-items: center; gap: 7px;
+        background: var(--surface); border: 1px solid var(--line); border-radius: 99px;
+        padding: 5px 12px; font-size: .82rem; font-weight: 700; color: var(--muted);
+      }
+      .legend i { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+      .legend .d-ok { background: var(--ok); } .legend .d-warn { background: var(--warn); } .legend .d-danger { background: var(--danger); } .legend .d-unk { background: var(--unknown); }
+
+      .filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
+      .filters button {
+        appearance: none; border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+        font: inherit; font-weight: 700; font-size: .9rem; padding: 8px 16px; border-radius: 99px; cursor: pointer;
+      }
+      .filters button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+      /* ---------- Cards ---------- */
+      .card {
+        background: var(--surface); border: 1px solid var(--line); border-radius: 18px;
+        box-shadow: var(--shadow); padding: 18px; margin-bottom: 12px;
+        display: flex; gap: 16px;
+      }
+      .card-body { flex: 1; min-width: 0; }
+      .card-top { display: flex; align-items: flex-start; gap: 10px; flex-wrap: wrap; }
+      .card-name { font-family: "Sora", sans-serif; font-weight: 700; font-size: 1.12rem; line-height: 1.25; }
+      .pill {
+        font-size: .74rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase;
+        padding: 4px 10px; border-radius: 99px; white-space: nowrap;
+      }
+      .pill.ok { background: var(--ok-soft); color: var(--ok); }
+      .pill.warn { background: var(--warn-soft); color: var(--warn); }
+      .pill.danger { background: var(--danger-soft); color: var(--danger); }
+      .pill.unknown { background: var(--unknown-soft); color: var(--unknown); }
+      @media (prefers-reduced-motion: no-preference) {
+        .pill.danger { animation: pulse 1.6s ease-in-out infinite; }
+        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .55; } }
+      }
+      .card-detail { color: var(--muted); font-weight: 600; font-size: .92rem; margin-top: 2px; }
+      .card-facts { display: flex; flex-wrap: wrap; gap: 6px 22px; margin-top: 12px; }
+      .fact .fk { display: block; font-size: .74rem; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
+      .fact .fv { font-weight: 800; font-variant-numeric: tabular-nums; }
+      .card-action { margin-top: 12px; font-size: .94rem; color: var(--muted); }
+      .card-action strong { color: var(--ink); }
+      .card-bar { height: 6px; border-radius: 99px; background: var(--surface-2); margin-top: 14px; overflow: hidden; }
+      .card-bar i { display: block; height: 100%; border-radius: 99px; width: 0%; transition: width .8s ease; }
+      .card[data-status="ok"] .card-bar i { background: var(--ok); }
+      .card[data-status="warn"] .card-bar i { background: var(--warn); }
+      .card[data-status="danger"] .card-bar i { background: var(--danger); }
+      .card[data-status="unknown"] .card-bar i { background: var(--unknown); width: 100%; opacity: .35; }
+      .card-count { text-align: center; flex: none; width: 86px; padding-top: 2px; }
+      .card-count .num { font-family: "Sora", sans-serif; font-weight: 800; font-size: 2.3rem; line-height: 1; font-variant-numeric: tabular-nums; }
+      .card-count .lbl { font-size: .8rem; font-weight: 700; color: var(--muted); margin-top: 3px; }
+      .card[data-status="warn"] .card-count .num { color: var(--warn); }
+      .card[data-status="danger"] .card-count .num { color: var(--danger); }
+      .card[data-status="ok"] .card-count .num { color: var(--ok); }
+      .card[data-status="unknown"] .card-count .num { color: var(--unknown); font-size: 1.6rem; padding-top: 6px; }
+      .card[data-status="danger"] { border-color: var(--danger); }
+      .empty { color: var(--muted); font-weight: 600; padding: 18px 4px; display: none; }
+
+      /* ---------- Cobras ---------- */
+      .cobro-pendiente {
+        background: var(--mint-soft); border: 1px solid var(--line); border-radius: 18px;
+        padding: 18px; display: flex; gap: 16px; align-items: center; margin-bottom: 14px;
+      }
+      .cobro-pendiente .amt { font-family: "Sora", sans-serif; font-weight: 800; font-size: 2rem; color: var(--mint); font-variant-numeric: tabular-nums; flex: none; }
+      .cobro-pendiente .t { font-weight: 800; }
+      .cobro-pendiente .s { color: var(--muted); font-weight: 600; font-size: .92rem; }
+      .prices { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .price {
+        background: var(--surface); border: 1px solid var(--line); border-radius: 16px;
+        padding: 16px; box-shadow: var(--shadow);
+      }
+      .price .p { font-family: "Sora", sans-serif; font-weight: 800; font-size: 1.55rem; font-variant-numeric: tabular-nums; }
+      .price .n { font-weight: 800; margin-top: 2px; }
+      .price .d { color: var(--muted); font-weight: 600; font-size: .9rem; margin-top: 2px; }
+      .price .tag { display: inline-block; margin-top: 8px; font-size: .74rem; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--warn); background: var(--warn-soft); padding: 3px 9px; border-radius: 99px; }
+
+      footer { margin-top: 38px; color: var(--muted); font-size: .9rem; font-weight: 500; border-top: 1px solid var(--line); padding-top: 16px; }
+      footer strong { color: var(--ink); }
+
+      @media (max-width: 620px) {
+        .hero { flex-direction: column; align-items: stretch; gap: 10px; }
+        .hero-count { text-align: left; display: flex; align-items: baseline; gap: 10px; }
+        .hero-count .num { font-size: 2.8rem; }
+        .stats { grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+        .stat { padding: 12px; }
+        .stat .v { font-size: 1.15rem; }
+        .stat .k { font-size: .78rem; }
+        .card { gap: 12px; padding: 16px; }
+        .card-count { width: 70px; }
+        .card-count .num { font-size: 1.9rem; }
+        .prices { grid-template-columns: 1fr; }
+        .cobro-pendiente { flex-direction: column; align-items: flex-start; gap: 6px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <p class="today-line"><span class="dot"></span><span id="todayText">Hoy</span></p>
+
+      <!-- Próximo cobro (lo calcula el script con la fecha de hoy) -->
+      <section class="hero" id="hero" data-status="ok">
+        <div class="hero-main">
+          <div class="hero-kicker">Próximo vencimiento</div>
+          <div class="hero-name" id="heroName">—</div>
+          <div class="hero-meta" id="heroMeta">—</div>
+          <div class="hero-bar"><i id="heroBar"></i></div>
+          <p class="hero-action" id="heroAction"></p>
+        </div>
+        <div class="hero-count">
+          <div class="num" id="heroNum">–</div>
+          <div class="lbl" id="heroLbl">días faltan</div>
+        </div>
+      </section>
+
+      <section class="stats" aria-label="Resumen de gastos fijos">
+        <div class="stat"><div class="v">$28</div><div class="k">Fijos al mes · Muse $20 + PanoCool $8</div></div>
+        <div class="stat"><div class="v">$281.08</div><div class="k">Fijos al año, sin PanoCool</div></div>
+        <div class="stat"><div class="v">$377.08</div><div class="k">Fijos al año, con PanoCool</div></div>
+      </section>
+
+      <h2 class="section">Lo que pagas</h2>
+      <p class="section-sub">Ordenado por urgencia. El color cambia solo, según los días que falten cuando abras el panel.</p>
+      <div class="legend" aria-hidden="true">
+        <span><i class="d-ok"></i> Más de 30 días</span>
+        <span><i class="d-warn"></i> 30 días o menos</span>
+        <span><i class="d-danger"></i> 7 días o menos</span>
+        <span><i class="d-unk"></i> Fecha por confirmar</span>
+      </div>
+
+      <div class="filters" role="group" aria-label="Filtrar vencimientos">
+        <button type="button" data-filter="all" aria-pressed="true">Todos</button>
+        <button type="button" data-filter="soon" aria-pressed="false">Vencen en 30 días</button>
+        <button type="button" data-filter="monthly" aria-pressed="false">Mensuales</button>
+        <button type="button" data-filter="yearly" aria-pressed="false">Anuales</button>
+      </div>
+
+      <div id="list"></div>
+      <p class="empty" id="emptyMsg">No hay vencimientos con ese filtro.</p>
+
+      <h2 class="section">Lo que cobras · KATO 360</h2>
+      <p class="section-sub">Tus precios actuales, para tenerlos a la mano.</p>
+
+      <div class="cobro-pendiente">
+        <div class="amt">$250</div>
+        <div>
+          <div class="t">Por cobrar — primer cliente (tu amigo)</div>
+          <div class="s">Tour de basement antes / después. Se cobra cuando entregues el tour completo, con las fotos del “después”.</div>
+        </div>
+      </div>
+
+      <div class="prices">
+        <div class="price"><div class="p">$200</div><div class="n">Tour Esencial</div><div class="d">Casas hasta 2,000 pies²</div></div>
+        <div class="price"><div class="p">$299</div><div class="n">Tour Pro</div><div class="d">Casas de 2,001 a 4,000 pies²</div></div>
+        <div class="price"><div class="p">$499</div><div class="n">Tour Negocio</div><div class="d">Más de 4,000 pies² o espacios comerciales</div></div>
+        <div class="price"><div class="p">$300</div><div class="n">Basement completo</div><div class="d">Precio fijo, tour completo de basement</div></div>
+        <div class="price"><div class="p">$899</div><div class="n">Paquete 5 casas</div><div class="d">Para clientes con varias propiedades</div></div>
+        <div class="price"><div class="p">$1,699</div><div class="n">Paquete 10 casas</div><div class="d">Para clientes con varias propiedades</div></div>
+        <div class="price"><div class="p">$50<span style="font-size:1rem">/mes</span></div><div class="n">Suscripción de clientes</div><div class="d">1 tour al mes para tus clientes</div></div>
+        <div class="price"><div class="p">$500<span style="font-size:1rem">/año</span></div><div class="n">Plan anual de clientes</div><div class="d">12 tours, 1 al mes</div></div>
+      </div>
+
+      <footer>
+        <p>Estos mismos avisos quedaron también en <strong>Recordatorios de Apple</strong> en tu iPhone y en los avisos por este chat: el aviso del hosting llega el <strong>29 de octubre</strong>, el del dominio el <strong>9 de octubre</strong> y el de Muse Power el <strong>día 15 de cada mes</strong>.</p>
+        <p>Cada tour incluye <strong>1 año de hosting</strong> para tu cliente. El costo de exportar cada tour en PanoCool ($9) ya está incluido en tus precios.</p>
+      </footer>
+    </main>
+
+    <script>
+      // ---------- Datos reales de las suscripciones de David ----------
+      var ITEMS = [
+        {
+          id: "hosting",
+          name: "Hosting de tu web",
+          detail: "Porkbun · Static Hosting 2 GB · kato360tours.com",
+          amount: 30, freqText: "al año", cadence: "yearly",
+          type: "trial", cycleStart: "2026-10-16", firstDue: "2026-10-31",
+          dueLabel: "Termina la prueba gratis y se cobra el año",
+          action: "<strong>Qué hacer:</strong> la prueba gratis de 15 días termina y se cobran los $30 del año. Si no quieres seguir con el hosting, hay que cancelarlo antes de ese día; nadie te puede cobrar un plan más caro sin que tú lo pidas."
+        },
+        {
+          id: "Muse",
+          name: "Muse Power",
+          detail: "Tu plan mensual de Muse",
+          amount: 20, freqText: "al mes", cadence: "monthly",
+          type: "monthly", day: 16,
+          dueLabel: "Cobro mensual (fecha aproximada)",
+          action: "<strong>Qué hacer:</strong> nada, se cobra solo cada mes, alrededor del día 16. El aviso te llega el día 15."
+        },
+        {
+          id: "dominio",
+          name: "Dominio kato360tours.com",
+          detail: "Porkbun · el nombre de tu página web",
+          amount: 11.08, freqText: "al año", cadence: "yearly",
+          type: "yearly", cycleStart: "2026-10-16", firstDue: "2027-10-16",
+          dueLabel: "Se renueva el dominio por un año más",
+          action: "<strong>Qué hacer:</strong> renovar antes de la fecha. Si el dominio vence sin pagar, pierdes el nombre y tu página deja de abrir como kato360tours.com."
+        },
+        {
+          id: "panocool",
+          name: "PanoCool",
+          detail: "La app donde armas tus tours 360",
+          amount: 8, freqText: "al mes", cadence: "monthly",
+          type: "unknown",
+          dueLabel: "Día exacto del cobro por confirmar",
+          action: "<strong>Qué hacer:</strong> confirmar el día exacto en que se cobra el plan de $8. Aparte del plan, cada tour que exportas cuesta $9, solo cuando exportas."
+        }
+      ];
+
+      // ---------- Utilidades de fechas (todo se calcula con la fecha de hoy) ----------
+      function parseLocal(s) {
+        var p = s.split("-");
+        return new Date(+p[0], +p[1] - 1, +p[2]);
+      }
+      function startOfDay(d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+      function daysBetween(a, b) { return Math.round((startOfDay(b) - startOfDay(a)) / 86400000); }
+      function fmtDate(d) {
+        return d.toLocaleDateString("es", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+      }
+      function fmtShort(d) {
+        return d.toLocaleDateString("es", { day: "numeric", month: "short", year: "numeric" });
+      }
+      function money(n) {
+        return "$" + n.toLocaleString("en-US", { minimumFractionDigits: (n % 1 ? 2 : 0), maximumFractionDigits: 2 });
+      }
+      function addYears(d, n) { return new Date(d.getFullYear() + n, d.getMonth(), d.getDate()); }
+
+      // Calcula el próximo vencimiento y el avance del ciclo (para la barra)
+      function compute(item, today) {
+        if (item.type === "unknown") return { due: null, days: null, frac: 1, prev: null };
+        if (item.type === "monthly") {
+          var next = new Date(today.getFullYear(), today.getMonth(), item.day);
+          if (next <= today) next = new Date(today.getFullYear(), today.getMonth() + 1, item.day);
+          var prev = new Date(next.getFullYear(), next.getMonth() - 1, item.day);
+          return { due: next, days: daysBetween(today, next), frac: daysBetween(prev, today) / daysBetween(prev, next), prev: prev };
+        }
+        // trial y yearly: primer vencimiento fijo, luego se repite cada año
+        var due = parseLocal(item.firstDue);
+        var start = parseLocal(item.cycleStart);
+        while (due < today) { start = due; due = addYears(due, 1); }
+        return { due: due, days: daysBetween(today, due), frac: daysBetween(start, today) / daysBetween(start, due), prev: start };
+      }
+
+      function statusOf(days) {
+        if (days === null) return "unknown";
+        if (days <= 7) return "danger";
+        if (days <= 30) return "warn";
+        return "ok";
+      }
+      function pillText(item, r) {
+        if (r.days === null) return "Por confirmar";
+        if (r.days < 0) return "Vencido";
+        if (r.days === 0) return "Vence hoy";
+        if (r.days <= 7) return "Vence ya";
+        if (r.days <= 30) return "Vence pronto";
+        return "Sin prisa";
+      }
+      function countLabel(r) {
+        if (r.days === null) return { num: "?", lbl: "fecha por confirmar" };
+        if (r.days < 0) return { num: Math.abs(r.days), lbl: r.days === -1 ? "día vencido" : "días vencido" };
+        if (r.days === 0) return { num: "0", lbl: "vence hoy" };
+        return { num: r.days, lbl: r.days === 1 ? "día falta" : "días faltan" };
+      }
+
+      var today = new Date();
+      document.getElementById("todayText").textContent =
+        "Hoy es " + today.toLocaleDateString("es", { weekday: "long", day: "numeric", month: "long", year: "numeric" }) +
+        " · así están tus vencimientos";
+
+      var computed = ITEMS.map(function (item) {
+        var r = compute(item, today);
+        r.status = statusOf(r.days);
+        return { item: item, r: r };
+      });
+      // Orden: primero los que vencen antes; los de fecha desconocida al final
+      computed.sort(function (a, b) {
+        if (a.r.days === null) return 1;
+        if (b.r.days === null) return -1;
+        return a.r.days - b.r.days;
+      });
+
+      // ---------- Hero: el vencimiento más cercano ----------
+      var first = computed.filter(function (c) { return c.r.days !== null; })[0];
+      if (first) {
+        var hero = document.getElementById("hero");
+        hero.setAttribute("data-status", first.r.status);
+        document.getElementById("heroName").textContent = first.item.name;
+        document.getElementById("heroMeta").innerHTML =
+          "<strong>" + money(first.item.amount) + "</strong> · " + first.item.dueLabel +
+          "<br>" + fmtDate(first.r.due);
+        document.getElementById("heroAction").innerHTML = first.item.action;
+        var cl = countLabel(first.r);
+        document.getElementById("heroNum").textContent = cl.num;
+        document.getElementById("heroLbl").textContent = cl.lbl;
+        requestAnimationFrame(function () {
+          document.getElementById("heroBar").style.width = Math.min(100, Math.max(2, first.r.frac * 100)) + "%";
+        });
+      }
+
+      // ---------- Lista de tarjetas ----------
+      var list = document.getElementById("list");
+      computed.forEach(function (c) {
+        var item = c.item, r = c.r, cl = countLabel(r);
+        var card = document.createElement("article");
+        card.className = "card";
+        card.setAttribute("data-status", r.status);
+        card.setAttribute("data-cadence", item.cadence);
+        card.setAttribute("data-days", r.days === null ? "" : r.days);
+        card.innerHTML =
+          '<div class="card-body">' +
+            '<div class="card-top"><span class="card-name">' + item.name + '</span>' +
+            '<span class="pill ' + r.status + '">' + pillText(item, r) + '</span></div>' +
+            '<div class="card-detail">' + item.detail + '</div>' +
+            '<div class="card-facts">' +
+              '<div class="fact"><span class="fk">Costo</span><span class="fv">' + money(item.amount) + " " + item.freqText + '</span></div>' +
+              '<div class="fact"><span class="fk">' + (r.days === null ? "Cobro" : "Próximo cobro") + '</span><span class="fv">' +
+                (r.due ? fmtShort(r.due) : "Por confirmar") + '</span></div>' +
+              '<div class="fact"><span class="fk">Qué pasa</span><span class="fv">' + item.dueLabel + '</span></div>' +
+            '</div>' +
+            '<p class="card-action">' + item.action + '</p>' +
+            '<div class="card-bar"><i></i></div>' +
+          '</div>' +
+          '<div class="card-count"><div class="num">' + cl.num + '</div><div class="lbl">' + cl.lbl + '</div></div>';
+        list.appendChild(card);
+        var bar = card.querySelector(".card-bar i");
+        requestAnimationFrame(function () {
+          bar.style.width = Math.min(100, Math.max(2, r.frac * 100)) + "%";
+        });
+      });
+
+      // ---------- Filtros ----------
+      var emptyMsg = document.getElementById("emptyMsg");
+      document.querySelectorAll(".filters button").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          document.querySelectorAll(".filters button").forEach(function (b) { b.setAttribute("aria-pressed", "false"); });
+          btn.setAttribute("aria-pressed", "true");
+          var f = btn.getAttribute("data-filter");
+          var visible = 0;
+          document.querySelectorAll("#list .card").forEach(function (card) {
+            var show = true;
+            if (f === "monthly" || f === "yearly") show = card.getAttribute("data-cadence") === f;
+            if (f === "soon") {
+              var d = card.getAttribute("data-days");
+              show = d !== "" && +d <= 30;
+            }
+            card.style.display = show ? "" : "none";
+            if (show) visible++;
+          });
+          emptyMsg.style.display = visible ? "none" : "block";
+        });
+      });
+    </script>
+  </body>
+</html>
