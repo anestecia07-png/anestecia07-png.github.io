@@ -1,0 +1,12 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Torres;David;;;
+FN:David Torres
+ORG:KATO 360
+TITLE:Tours Virtuales 360
+TEL;TYPE=CELL;TYPE=VOICE;TYPE=PREF:+13134491043
+EMAIL;TYPE=WORK:Kato360_@hotmail.com
+URL:https://kato360tours.com
+ADR;TYPE=WORK:;;;Lincoln Park;MI;;USA
+NOTE:Tours virtuales 360 para propiedades, negocios, vehiculos y todo espacio en Michigan.
+END:VCARD

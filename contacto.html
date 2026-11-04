@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#070503">
+<title>David Torres · KATO 360 — Contacto</title>
+<meta name="description" content="Guarda el contacto de David Torres, KATO 360: tours virtuales 360 en Michigan. Un toque y queda en tu teléfono.">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background:#070503; color:#f5efe4;
+    font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    min-height:100vh; display:flex; justify-content:center;
+    padding:28px 16px 40px;
+  }
+  .card { width:100%; max-width:420px; text-align:center; }
+  .badge {
+    width:104px; height:104px; margin:8px auto 14px;
+    border:3px solid #efa417; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:52px; font-weight:900; color:#efa417;
+    letter-spacing:-2px; background:#0d0a05;
+    box-shadow:0 0 24px rgba(239,164,23,.25);
+  }
+  h1 { font-size:30px; font-weight:800; letter-spacing:.5px; }
+  .brand { color:#efa417; font-size:19px; font-weight:800; letter-spacing:3px; margin-top:2px; }
+  .sub { color:#cbbfa5; font-size:15px; margin:8px 0 26px; line-height:1.45; }
+  .btn {
+    display:flex; align-items:center; gap:12px;
+    width:100%; padding:16px 18px; margin:0 0 12px;
+    background:#14100a; border:1px solid #3a2c12; border-radius:14px;
+    color:#f5efe4; text-decoration:none; text-align:left;
+    font-size:17px; font-weight:700; cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .btn:active { background:#1d170c; }
+  .btn .ico { font-size:22px; width:28px; text-align:center; flex:none; }
+  .btn small { display:block; font-size:13px; font-weight:400; color:#cbbfa5; margin-top:1px; }
+  .btn.primary {
+    background:#efa417; border-color:#efa417; color:#171106;
+    justify-content:center; text-align:center; font-size:19px;
+    box-shadow:0 6px 20px rgba(239,164,23,.35);
+  }
+  .btn.primary small { color:#4a3808; }
+  .hint { color:#8f8268; font-size:13px; margin-top:14px; line-height:1.5; }
+</style>
+</head>
+<body>
+  <main class="card">
+    <div class="badge">K</div>
+    <h1>David Torres</h1>
+    <div class="brand">KATO 360°</div>
+    <p class="sub">Tours virtuales 360° para propiedades, negocios y vehículos en Michigan.</p>
+
+    <button class="btn primary" id="saveBtn" type="button">
+      <span>⭐ Guardar mi contacto<small>Save my contact · queda en tu teléfono en segundos</small></span>
+    </button>
+
+    <a class="btn" href="https://wa.me/13134491043?text=Hola%20David%2C%20quiero%20informaci%C3%B3n%20sobre%20un%20tour%20360">
+      <span class="ico">💬</span>
+      <span>WhatsApp<small>Escríbeme directo · (313) 449-1043</small></span>
+    </a>
+
+    <a class="btn" href="tel:+13134491043">
+      <span class="ico">📞</span>
+      <span>Llamar<small>Call · (313) 449-1043</small></span>
+    </a>
+
+    <a class="btn" href="mailto:Kato360_@hotmail.com">
+      <span class="ico">✉️</span>
+      <span>Correo<small>Email · Kato360_@hotmail.com</small></span>
+    </a>
+
+    <a class="btn" href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1KyGYvCBp5Yw9V3oURLB3FXAbgeAutU_2zVQ9TDeRH1IyVmkTszq_7i_1fLh5zFRrTxrLemvmV">
+      <span class="ico">📅</span>
+      <span>Reservar cita gratis<small>Book a free appointment</small></span>
+    </a>
+
+    <a class="btn" href="https://kato360tours.com">
+      <span class="ico">🌐</span>
+      <span>Ver tours 360<small>kato360tours.com</small></span>
+    </a>
+
+    <a class="btn" href="https://www.instagram.com/kolimocho1">
+      <span class="ico">📸</span>
+      <span>Instagram<small>@kolimocho1</small></span>
+    </a>
+
+    <p class="hint">Toca el botón dorado y mi número, correo y página quedan guardados en tus contactos. Sin escribir nada a mano.</p>
+  </main>
+
+<script>
+  var vcard = [
+    'BEGIN:VCARD',
+    'VERSION:3.0',
+    'N:Torres;David;;;',
+    'FN:David Torres',
+    'ORG:KATO 360',
+    'TITLE:Tours Virtuales 360',
+    'TEL;TYPE=CELL;TYPE=VOICE;TYPE=PREF:+13134491043',
+    'EMAIL;TYPE=WORK:Kato360_@hotmail.com',
+    'URL:https://kato360tours.com',
+    'ADR;TYPE=WORK:;;;Lincoln Park;MI;;USA',
+    'NOTE:Tours virtuales 360 para propiedades, negocios, vehiculos y todo espacio en Michigan.',
+    'END:VCARD'
+  ].join('\r\n');
+
+  document.getElementById('saveBtn').addEventListener('click', function () {
+    var blob = new Blob([vcard], { type: 'text/vcard;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'David-Torres-KATO360.vcf';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+  });
+</script>
+</body>
+</html>
