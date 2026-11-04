@@ -6,6 +6,8 @@
 <meta name="theme-color" content="#070503">
 <title>David Torres · KATO 360 — Contacto</title>
 <meta name="description" content="Guarda el contacto de David Torres, KATO 360: tours virtuales 360 en Michigan. Un toque y queda en tu teléfono.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700&display=swap" rel="stylesheet">
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
   body {
@@ -15,14 +17,7 @@
     padding:28px 16px 40px;
   }
   .card { width:100%; max-width:420px; text-align:center; }
-  .badge {
-    width:104px; height:104px; margin:8px auto 14px;
-    border:3px solid #efa417; border-radius:50%;
-    display:flex; align-items:center; justify-content:center;
-    font-size:52px; font-weight:900; color:#efa417;
-    letter-spacing:-2px; background:#0d0a05;
-    box-shadow:0 0 24px rgba(239,164,23,.25);
-  }
+  .logo { width:250px; max-width:82%; height:auto; margin:4px auto 12px; display:block; }
   h1 { font-size:30px; font-weight:800; letter-spacing:.5px; }
   .brand { color:#efa417; font-size:19px; font-weight:800; letter-spacing:3px; margin-top:2px; }
   .sub { color:#cbbfa5; font-size:15px; margin:8px 0 26px; line-height:1.45; }
@@ -38,9 +33,9 @@
   .btn .ico { font-size:22px; width:28px; text-align:center; flex:none; }
   .btn small { display:block; font-size:13px; font-weight:400; color:#cbbfa5; margin-top:1px; }
   .btn.primary {
-    background:#efa417; border-color:#efa417; color:#171106;
+    background:linear-gradient(180deg,#ffedb0 0%,#ffd94d 35%,#e9b93c 60%,#c9962e 100%); border-color:#d4af37; color:#171106;
     justify-content:center; text-align:center; font-size:19px;
-    box-shadow:0 6px 20px rgba(239,164,23,.35);
+    box-shadow:0 6px 22px rgba(212,175,55,.45);
   }
   .btn.primary small { color:#4a3808; }
   .hint { color:#8f8268; font-size:13px; margin-top:14px; line-height:1.5; }
@@ -48,9 +43,36 @@
 </head>
 <body>
   <main class="card">
-    <div class="badge">K</div>
+    <svg class="logo" viewBox="0 0 1045 424" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="KATO 360">
+      <defs>
+        <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#fff6c9"/>
+          <stop offset=".28" stop-color="#ffe25a"/>
+          <stop offset=".55" stop-color="#d4af37"/>
+          <stop offset=".8" stop-color="#a97e14"/>
+          <stop offset="1" stop-color="#ffedb0"/>
+        </linearGradient>
+      </defs>
+      <g transform="translate(120,104) scale(4.5)">
+        <path d="M20.7 5.3 A19 19 0 0 1 33.5 40.5" stroke="url(#gold)" stroke-width="4" stroke-linecap="round" fill="none"/>
+        <path d="M27.3 42.7 A19 19 0 0 1 14.5 7.6" stroke="url(#gold)" stroke-width="4" stroke-linecap="round" fill="none"/>
+        <text x="24" y="31" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-size="19" font-weight="700" fill="url(#gold)">K</text>
+      </g>
+      <text x="384" y="259.52" font-family="Barlow Condensed, sans-serif" font-size="134" font-weight="700" letter-spacing="6.7"><tspan fill="url(#gold)">KATO </tspan><tspan fill="url(#gold)">360</tspan></text>
+      <g transform="translate(849.159375,128.2) rotate(-8 52 52) scale(4.333333333333333)">
+        <path d="M12 4.5V2.9" stroke="url(#gold)" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="12" cy="2.3" r="1.2" fill="url(#gold)"/>
+        <path d="M7.6 10.4a4.4 4.4 0 0 1 8.8 0z" fill="url(#gold)"/>
+        <circle cx="10.3" cy="7.8" r=".95" fill="#07110f" opacity=".5"/>
+        <ellipse cx="12" cy="12.8" rx="10.4" ry="3.7" fill="url(#gold)"/>
+        <ellipse cx="12" cy="11.9" rx="10.4" ry="3.3" fill="#fff8dc"/>
+        <circle cx="6" cy="12.5" r="1.05" fill="url(#gold)"/>
+        <circle cx="12" cy="13.4" r="1.05" fill="url(#gold)"/>
+        <circle cx="18" cy="12.5" r="1.05" fill="url(#gold)"/>
+        <path d="M8.7 16.9h6.6l2.5 4.5H6.2z" fill="url(#gold)" opacity=".38"/>
+      </g>
+    </svg>
     <h1>David Torres</h1>
-    <div class="brand">KATO 360°</div>
     <p class="sub">Tours virtuales 360° para propiedades, negocios y vehículos en Michigan.</p>
 
     <button class="btn primary" id="saveBtn" type="button">
